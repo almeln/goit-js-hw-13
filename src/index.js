@@ -7,21 +7,23 @@ import PhotosApiService from './js/photos-api';
 
 
 import getRefs from './js/get-refs';
-// import LoadMoreBtn from './js/components/load-more-btn';
+import LoadMoreBtn from './js/components/load-more-btn';
 
 
 
 const refs = getRefs();
 
-// const loadMoreBtn = new LoadMoreBtn({
-//     selector: '.load-more',
-//     hidden: true,
-// });
+const loadMoreBtn = new LoadMoreBtn({
+    selector: '.load-more',
+    hidden: true,
+});
+
+// loadMoreBtn.show();
 
 const photosApiService = new PhotosApiService();
 
 refs.searchForm.addEventListener('submit', onSearch);
-refs.loadMoreBtn.addEventListener('click', onLoadMore);
+refs.loadMoreBtn.addEventListener('click', fetchPhotos);
 
 function onSearch(e) {
     e.preventDefault();
@@ -32,16 +34,25 @@ function onSearch(e) {
         return alert('Введи что-то нормальное');
     }
 
+    loadMoreBtn.show();
     photosApiService.resetPage();
-    photosApiService.fetchPhotos().then(photos => {
-        clearPhotosCard();
-        appendPhotosMarkup(photos);
-    });
+    clearPhotosCard();
+
+
+    fetchPhotos();
 
 }
 
-function onLoadMore() {
-    photosApiService.fetchPhotos().then(appendPhotosMarkup);
+// function onLoadMore() {
+//     fetchPhotos();
+// }
+
+function fetchPhotos() {
+    loadMoreBtn.disable();
+    photosApiService.fetchPhotos().then(photos => {
+        appendPhotosMarkup(photos);
+        loadMoreBtn.enable();
+    });
 }
 
 function appendPhotosMarkup(photos) {
