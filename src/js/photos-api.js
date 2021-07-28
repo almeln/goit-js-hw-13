@@ -17,13 +17,20 @@ export default class PhotosApiService {
 
         const url = `${BASE_URL}?key=${API_KEY}&${PARAMETERS}`;
         
-        return fetch(url)
-            .then(r => r.json())
-            .then(data => {
-                console.log(data);
+        // return fetch(url)
+        //     .then(r => r.json())
+        //     .then(data => {
+        //         console.log(data);
+        //         this.incrementPage();
+        //         return data;
+        //     });
+
+        return axios
+            .get(url)
+            .then(response => {
+                // console.log(response.data);
                 this.incrementPage();
-                // console.log(data.totalHits);
-                return data;
+                return response.data;
             });
     }
 
