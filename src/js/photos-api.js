@@ -13,7 +13,7 @@ export default class PhotosApiService {
 
     fetchPhotos() {
         console.log(this);
-        const PARAMETERS = `q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=4`;
+        const PARAMETERS = `q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=40`;
 
         const url = `${BASE_URL}?key=${API_KEY}&${PARAMETERS}`;
         
@@ -22,7 +22,8 @@ export default class PhotosApiService {
             .then(data => {
                 console.log(data);
                 this.incrementPage();
-                return data.hits;
+                // console.log(data.totalHits);
+                return data;
             });
     }
 

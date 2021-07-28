@@ -1,7 +1,5 @@
 import './sass/main.scss';
 
-// import './js/fetchPhotos'
-
 import photoCardTpl from './templates/photo-card.hbs';
 import PhotosApiService from './js/photos-api';
 
@@ -9,7 +7,7 @@ import PhotosApiService from './js/photos-api';
 import getRefs from './js/get-refs';
 import LoadMoreBtn from './js/components/load-more-btn';
 
-
+import Notiflix from "notiflix";
 
 const refs = getRefs();
 
@@ -18,9 +16,9 @@ const loadMoreBtn = new LoadMoreBtn({
     hidden: true,
 });
 
-// loadMoreBtn.show();
-
 const photosApiService = new PhotosApiService();
+
+let sum = null;
 
 refs.searchForm.addEventListener('submit', onSearch);
 refs.loadMoreBtn.addEventListener('click', fetchPhotos);
@@ -31,27 +29,30 @@ function onSearch(e) {
     photosApiService.query = e.currentTarget.elements.searchQuery.value.trim();
 
     if (photosApiService.query === '') {
-        return alert('Введи что-то нормальное');
-    }
+        return Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+    } 
 
     loadMoreBtn.show();
     photosApiService.resetPage();
     clearPhotosCard();
-
-
     fetchPhotos();
-
+    
 }
-
-// function onLoadMore() {
-//     fetchPhotos();
-// }
 
 function fetchPhotos() {
     loadMoreBtn.disable();
-    photosApiService.fetchPhotos().then(photos => {
-        appendPhotosMarkup(photos);
-        loadMoreBtn.enable();
+    photosApiService.fetchPhotos().then(({hits, totalHits}) => {
+        sum += hits.length;
+
+        if (sum <= totalHits) {
+            appendPhotosMarkup(hits);
+            loadMoreBtn.enable();
+        }
+        
+        else {
+            loadMoreBtn.hide();
+            return Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
+        }
     });
 }
 
