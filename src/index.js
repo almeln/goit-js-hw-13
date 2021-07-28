@@ -46,11 +46,10 @@ function fetchPhotos() {
         sum += hits.length;
 
         if (sum <= totalHits) {
+            photosApiService.incrementPage();
             appendPhotosMarkup(hits);
             loadMoreBtn.enable();
-        }
-        
-        else {
+        } else {
             loadMoreBtn.hide();
             return Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
         }

@@ -11,7 +11,7 @@ export default class PhotosApiService {
         this.page = 1;
     }
 
-    fetchPhotos() {
+    async fetchPhotos() {
         console.log(this);
         const PARAMETERS = `q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=40`;
 
@@ -25,13 +25,17 @@ export default class PhotosApiService {
         //         return data;
         //     });
 
-        return axios
-            .get(url)
-            .then(response => {
-                // console.log(response.data);
-                this.incrementPage();
-                return response.data;
-            });
+        // return axios
+        //     .get(url)
+        //     .then(response => {
+        //         // console.log(response.data);
+        //         this.incrementPage();
+        //         return response.data;
+        //     });
+
+        const response = await axios.get(url);
+        return response.data;
+
     }
 
     incrementPage() {
