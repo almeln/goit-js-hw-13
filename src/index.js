@@ -29,6 +29,8 @@ function onSearch(e) {
     photosApiService.query = e.currentTarget.elements.searchQuery.value.trim();
 
     if (photosApiService.query === '') {
+        clearPhotosCard();
+        loadMoreBtn.hide();
         return Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
     } 
 
@@ -38,7 +40,7 @@ function onSearch(e) {
     fetchPhotos();
     photosApiService.fetchPhotos().then(({hits, totalHits}) => {
         if (hits.length !== 0) {
-        return Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+            return Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
         }
     })
 
@@ -49,8 +51,10 @@ function fetchPhotos() {
     photosApiService.fetchPhotos().then(({hits, totalHits}) => {
         sum += hits.length;
 
-
-        if (sum <= totalHits) {
+        if (hits.length === 0) {
+            loadMoreBtn.hide();
+            return Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+        } else if (sum <= totalHits) {
             photosApiService.incrementPage();
             appendPhotosMarkup(hits);
             loadMoreBtn.enable();
