@@ -1,9 +1,8 @@
 import axios from 'axios';
+import Notiflix from "notiflix";
 
 const BASE_URL = 'https://pixabay.com/api/';
 const API_KEY = '22659377-0dd97b237805bca735c774318';
-// const PARAMETERS = `q=${name}&image_type=photo&orientation=horizontal&safesearch=true`;
-
 
 export default class PhotosApiService {
     constructor() {

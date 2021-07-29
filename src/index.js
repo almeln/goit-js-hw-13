@@ -37,13 +37,19 @@ function onSearch(e) {
     photosApiService.resetPage();
     clearPhotosCard();
     fetchPhotos();
-    
+    photosApiService.fetchPhotos().then(({hits, totalHits}) => {
+        if (hits.length !== 0) {
+        return Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+        }
+    })
+
 }
 
 function fetchPhotos() {
     loadMoreBtn.disable();
     photosApiService.fetchPhotos().then(({hits, totalHits}) => {
         sum += hits.length;
+
 
         if (sum <= totalHits) {
             photosApiService.incrementPage();
