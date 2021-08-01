@@ -25,7 +25,18 @@ const photosApiService = new PhotosApiService();
 let sum = null;
 
 refs.searchForm.addEventListener('submit', onSearch);
-refs.loadMoreBtn.addEventListener('click', fetchPhotos);
+
+// Загрузка следующих станиц при помощи кнопки
+// refs.loadMoreBtn.addEventListener('click', fetchPhotos);
+
+// Бесконечный скролл
+
+window.addEventListener('scroll', () => {
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    if(clientHeight + scrollTop >= scrollHeight - 5) {
+		fetchPhotos();
+	}
+});
 
 function onSearch(e) {
     e.preventDefault();
@@ -38,7 +49,7 @@ function onSearch(e) {
         return Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
     } 
 
-    loadMoreBtn.show();
+    // loadMoreBtn.show();
     photosApiService.resetPage();
     clearPhotosCard();
     fetchPhotos();
@@ -51,7 +62,7 @@ function onSearch(e) {
 }
 
 function fetchPhotos() {
-    loadMoreBtn.disable();
+    // loadMoreBtn.disable();
     photosApiService.fetchPhotos().then(({hits, totalHits}) => {
         sum += hits.length;
 
@@ -65,7 +76,7 @@ function fetchPhotos() {
             loadMoreBtn.enable();
             scrollPhotos();
         } else {
-            loadMoreBtn.hide();
+            // loadMoreBtn.hide();
             return Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
         }
     });
@@ -85,8 +96,7 @@ function scrollPhotos() {
   .firstElementChild.getBoundingClientRect();
 
 window.scrollBy({
-  top: cardHeight * 13,
+  top: cardHeight * 10,
   behavior: 'smooth',
 });
 }
-
