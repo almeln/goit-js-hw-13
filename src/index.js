@@ -1,4 +1,6 @@
 import './sass/main.scss';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.css';
 
 import photoCardTpl from './templates/photo-card.hbs';
 import PhotosApiService from './js/photos-api';
@@ -10,6 +12,8 @@ import LoadMoreBtn from './js/components/load-more-btn';
 import Notiflix from "notiflix";
 
 const refs = getRefs();
+
+var lightbox = new SimpleLightbox('.gallery a');
 
 const loadMoreBtn = new LoadMoreBtn({
     selector: '.load-more',
@@ -57,6 +61,7 @@ function fetchPhotos() {
         } else if (sum <= totalHits) {
             photosApiService.incrementPage();
             appendPhotosMarkup(hits);
+            lightbox.refresh();
             loadMoreBtn.enable();
             scrollPhotos();
         } else {
@@ -80,7 +85,7 @@ function scrollPhotos() {
   .firstElementChild.getBoundingClientRect();
 
 window.scrollBy({
-  top: cardHeight * 11,
+  top: cardHeight * 13,
   behavior: 'smooth',
 });
 }
