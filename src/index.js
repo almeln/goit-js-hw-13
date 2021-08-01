@@ -58,6 +58,7 @@ function fetchPhotos() {
             photosApiService.incrementPage();
             appendPhotosMarkup(hits);
             loadMoreBtn.enable();
+            scrollPhotos();
         } else {
             loadMoreBtn.hide();
             return Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
@@ -71,5 +72,16 @@ function appendPhotosMarkup(photos) {
 
 function clearPhotosCard() {
     refs.gallery.innerHTML = '';
+}
+
+function scrollPhotos() {
+    const { height: cardHeight } = document
+  .querySelector('.gallery')
+  .firstElementChild.getBoundingClientRect();
+
+window.scrollBy({
+  top: cardHeight * 11,
+  behavior: 'smooth',
+});
 }
 
