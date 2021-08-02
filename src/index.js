@@ -13,6 +13,10 @@ import Notiflix from "notiflix";
 
 const refs = getRefs();
 
+const debounce = require('lodash.debounce');
+
+const DEBOUNCE_DELAY = 300;
+
 var lightbox = new SimpleLightbox('.gallery a');
 
 const loadMoreBtn = new LoadMoreBtn({
@@ -31,12 +35,7 @@ refs.searchForm.addEventListener('submit', onSearch);
 
 // Бесконечный скролл
 
-window.addEventListener('scroll', () => {
-    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    if(clientHeight + scrollTop >= scrollHeight - 5) {
-		fetchPhotos();
-	}
-});
+window.addEventListener('scroll', debounce(addContentByScrolling, DEBOUNCE_DELAY));
 
 function onSearch(e) {
     e.preventDefault();
@@ -76,7 +75,6 @@ function fetchPhotos() {
             loadMoreBtn.enable();
             scrollPhotos();
         } else {
-            // loadMoreBtn.hide();
             return Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
         }
     });
@@ -99,4 +97,12 @@ window.scrollBy({
   top: cardHeight * 10,
   behavior: 'smooth',
 });
+}
+
+function addContentByScrolling() {
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    console.log(clientHeight, scrollTop, scrollHeight);
+    if (clientHeight + scrollTop >= scrollHeight - 5) {
+    fetchPhotos();
+    }
 }
